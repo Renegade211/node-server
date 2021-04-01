@@ -46,6 +46,7 @@ var cors = require('cors');
 var cron = require('cron').CronJob;
 var rp = require('request-promise-native');
 var swaggerUi = require('swagger-ui-express');
+var options = require('./openapi');
 require('dotenv').config();
 app_1.default.initializeApp({
     apiKey: process.env.FIREBASE_API_KEY,
@@ -132,91 +133,5 @@ app.get('/trm', function (req, res) {
     });
     res.send(data);
 });
-var options = {
-    swagger: "2.0",
-    info: {
-        title: "TransferWise Express API",
-        version: "1.0.0",
-        description: "Simple Express API",
-        contact: {
-            name: "Vasyl Shponarskyi",
-            email: "vasyl.shponarskyi@gmail.com"
-        },
-        license: {
-            name: "MIT",
-            url: "https://spdx.org/licenses/MIT.html"
-        }
-    },
-    servers: [
-        {
-            url: "http://localhost:3000/trm",
-            description: "Local server"
-        }
-    ],
-    tags: [
-        {
-            name: "GET"
-        },
-        {
-            name: "POST"
-        }
-    ],
-    paths: {
-        "/trm": {
-            get: {
-                tags: ["GET"],
-                description: "Get data from Firebase",
-                operationId: "getData",
-                responses: {
-                    "200": {
-                        description: "Successful request",
-                        content: {
-                            "application/json": {
-                                schema: {
-                                    type: 'array',
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            post: {
-                tags: ["POST"],
-                description: "Request current rate",
-                operationId: "request",
-                consumes: ['application/json'],
-                parameters: [
-                    {
-                        name: 'source',
-                        in: 'body',
-                        content: {
-                            'text/plain': {
-                                type: 'string'
-                            }
-                        }
-                    },
-                    {
-                        name: 'target',
-                        in: 'body',
-                    }
-                ],
-                responses: {
-                    "200": {
-                        description: "Successful request",
-                        content: {
-                            "application/json": {
-                                schema: {
-                                    'text/plain': {
-                                        type: 'string'
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-};
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(options));
 app.listen(3000, function () { return console.log('API on port 3000'); });
